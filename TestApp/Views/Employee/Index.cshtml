@@ -1,0 +1,164 @@
+﻿@model IEnumerable<TestApp.Models.CustomModel.EmployeeCustomModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+<br />
+@Html.ActionLink("Employee Salary", "Index", "EmployeeSalary")<br />
+@Html.ActionLink("Filter Salary", "Index", "FilterSalary")
+<br />
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Department)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Age)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+                @*@item.DOB.ToString("dd/MM/yyyy")*@
+                @*@Html.DisplayFor(modelItem => item.DOB, "{0:MM-dd-yyy}")*@
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "" })
+                @*@Html.ActionLink("Details", "Details", new { id = item.ID }) |*@
+                @*@Html.ActionLink("Delete", "Delete", new { id = item.ID, onclick = "OnDelete('item.ID')" })
+                    <a href="javascript: void(0);" ondblclick="" class="btn btn-danger btn-sm" title="Delete" data-toggle="modal" data-target="#deleteModal"
+                       onclick="OnDelete('@item.ID.ToString()');"><i class="fa fa-trash-o"></i></a>*@
+
+                @Html.ActionLink("Delete", "Delete", new { id=item.ID }, new { @class="element",
+               @data_toggle = "modal", @data_target = "#deleteModal",
+               @data_id = item.ID})
+                @Html.Hidden("itemid", "", new { id = "itemid" })
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+@*<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Are you sure you want to delete this termination record? <br /><span class="text-danger">This cannot be undone.</span></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="Delete" class="btn btn-danger" onclick="OnDelete1()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.element').click(function (e) {
+
+            e.preventDefault();
+            $('#deleteModal').modal('show');
+
+            var id = $(this).data('id');
+            $('#itemid').val(id);
+        });
+        $('#Delete').click(function () {
+        var studentId = $('#itemid').val();
+        $.post(@Url.Action("Delete", "Delete"), { id: studentId }, function (data) {
+       // do something after calling delete action method
+       // this alert box just an example
+       alert("Deleted StudentId: " + studentId);
+   });
+            $('#deleteModal').modal('hide');
+        });
+      });
+
+
+        @*function OnDelete1() {
+                        debugger;
+         var studentId = $('#itemid').val();
+         $.post(@Url.Action("Delete", "Delete"), { id: studentId }, function (data) {
+       // do something after calling delete action method
+       // this alert box just an example
+             alert("Deleted StudentId: " + studentId);
+            });
+            $('#deleteModal').modal('hide');
+        }*@
+ @*var OnDelete = function (id) {
+                Common.BootStrap.Confirm("sa"),
+                     function (result) {
+                         if (result) {
+                             var deleteModel = { Id: id };
+                             $.ajax({
+                                 loadingFlag: true,
+                                 async: true,
+                                 cache: false,
+                                 type: 'POST',
+                                 url: '@Url.Action("Delete", "Organization", new { Area = "Client" })',
+                                 data: deleteModel,
+                                 success: function (response) {
+                                     showJSNotificationMessage(response.MessageType, response.Message);
+                                     if (response.Status)
+                                         OnLoadGrid(Url_Organization_Grid);
+                                     return true;
+                                 },
+                                 error: function (xhr, ajaxOptions, errorThrown) {
+                                     showJSNotificationMessage("Error", Common.Ajax.GrepError(xhr, ajaxOptions, errorThrown));
+                                 }
+                             });
+                         }
+                     });
+            };
+   // };*@
+
+        @*function OnDelete(id) {
+            alert(id);
+            Common.BootStrap.Confirm("ds", "ds",
+                     function (result) {
+                         if (result) {
+                             var deleteModel = { Id: id };
+                             $.ajax({
+                                 loadingFlag: true,
+                                 async: true,
+                                 cache: false,
+                                 type: 'POST',
+                                 url: '@Url.Action("Delete", "Organization", new { Area = "Client" })',
+                                 data: deleteModel,
+                                 success: function (response) {
+                                     showJSNotificationMessage(response.MessageType, response.Message);
+                                     if (response.Status)
+                                         OnLoadGrid(Url_Organization_Grid);
+                                     return true;
+                                 },
+                                 error: function (xhr, ajaxOptions, errorThrown) {
+                                     showJSNotificationMessage("Error", Common.Ajax.GrepError(xhr, ajaxOptions, errorThrown));
+                                 }
+                             });
+                         }
+                     });
+        }*@
+
+    </script>
+}
